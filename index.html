@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Databricks Line: an interactive roadmap</title>
+<meta name="description" content="A hands-on, interactive introduction to every major part of the Databricks platform.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=Source+Sans+3:wght@400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: light;
+  --bg:#E9EEF2; --surface:#FFFFFF; --surface-2:#F3F6F9; --line:#C3CDD7;
+  --ink:#16233A; --muted:#4E5E72; --code-bg:#16233A; --code-ink:#E9EEF2; --code-dim:#8FA3B8;
+  --teal:#2A7F7A; --teal-t:#D3ECE8; --gold:#A87D0C; --gold-t:#F5E6B8;
+  --steel:#4F6B87; --steel-t:#DCE6F0; --bronze:#A8652F; --bronze-t:#F1DCC8;
+  --plum:#6B5A86; --plum-t:#E6E0EF; --ok:#2E7D4F; --bad:#B4413A; --bad-t:#F6D9D6;
+  --serif:"Lora", Georgia, "Times New Roman", serif;
+  --sans:"Source Sans 3", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono:"Source Code Pro", ui-monospace, Menlo, Consolas, monospace;
+  --r-lg:20px; --r-md:12px; --r-sm:8px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --bg:#121C2B; --surface:#1B2838; --surface-2:#223246; --line:#33475E;
+    --ink:#E6ECF2; --muted:#A6B4C4; --code-bg:#0E1622; --code-ink:#E6ECF2; --code-dim:#7F93A8;
+    --teal:#4FB3AC; --teal-t:#1E3B3C; --gold:#D9A93A; --gold-t:#3B3220;
+    --steel:#8AA7C6; --steel-t:#24364B; --bronze:#D58A52; --bronze-t:#3D2B1F;
+    --plum:#A894C8; --plum-t:#2F2840; --ok:#5CC28A; --bad:#E07A72; --bad-t:#3F2422;
+  }
+}
+:root[data-theme="dark"]{
+    color-scheme: dark;
+    --bg:#121C2B; --surface:#1B2838; --surface-2:#223246; --line:#33475E;
+    --ink:#E6ECF2; --muted:#A6B4C4; --code-bg:#0E1622; --code-ink:#E6ECF2; --code-dim:#7F93A8;
+    --teal:#4FB3AC; --teal-t:#1E3B3C; --gold:#D9A93A; --gold-t:#3B3220;
+    --steel:#8AA7C6; --steel-t:#24364B; --bronze:#D58A52; --bronze-t:#3D2B1F;
+    --plum:#A894C8; --plum-t:#2F2840; --ok:#5CC28A; --bad:#E07A72; --bad-t:#3F2422;
+}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+html{scroll-padding-top:env(safe-area-inset-top,0px);}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased;}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--teal);outline-offset:2px;border-radius:6px}
+h1,h2,h3{font-family:var(--serif);line-height:1.15;margin:0}
+code,.mono{font-family:var(--mono)}
+.wrap{max-width:780px;margin:0 auto;padding:0 18px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* top bar */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
+.top .wrap{display:flex;align-items:center;gap:12px;height:60px}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-weight:700;font-size:19px;background:none;border:0;padding:0;white-space:nowrap;min-width:0}
+.brand span{overflow:hidden;text-overflow:ellipsis}
+.brand-short{display:none}
+@media (max-width:480px){.top .wrap{gap:8px;padding:0 12px}.brand{font-size:17px;gap:8px}.brand .roundel{width:26px;height:26px}.brand-long{display:none}.brand-short{display:inline}.progress-pill{padding:4px 10px 4px 5px;font-size:14px}.ring{width:22px;height:22px}.icon-btn{width:36px;height:36px}}
+@media (max-width:400px){.brand-short{display:none}}
+.roundel{width:30px;height:30px;flex:none}
+.spacer{flex:1}
+.progress-pill{white-space:nowrap;flex:none;display:flex;align-items:center;gap:8px;font-weight:600;font-size:15px;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px 12px 5px 6px}
+.ring{width:26px;height:26px;transform:rotate(-90deg)}
+.icon-btn{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center}
+.icon-btn svg{width:20px;height:20px}
+
+/* views */
+.view{display:none;padding-bottom:110px}
+.view.on{display:block}
+
+/* hero */
+.hero{padding:30px 0 8px}
+.hero h1{font-size:clamp(34px,8vw,54px);letter-spacing:-0.01em}
+.hero p{color:var(--muted);max-width:56ch;margin:12px 0 0;font-size:18px}
+.hero-line{margin:26px 0 6px;width:100%;height:56px;display:block}
+.hero-line path{stroke-dasharray:1000;stroke-dashoffset:1000;animation:draw 1.6s ease-out forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:11px 20px;font-weight:700;border:2px solid var(--ink);background:var(--ink);color:var(--bg)}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.small{padding:7px 14px;font-size:15px}
+.btn.teal{background:var(--teal);border-color:var(--teal);color:#fff}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn svg{width:18px;height:18px}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin:22px 0 4px;font-size:15px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:22px;height:6px;border-radius:3px;display:inline-block}
+
+/* metro map */
+.zone{margin-top:30px}
+.zone-head{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.zone-badge{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;font-family:var(--serif);font-size:17px}
+.zone-head h2{font-size:24px}
+.zone-head p{margin:0;color:var(--muted);font-size:15px}
+.stops{list-style:none;margin:0;padding:0;position:relative}
+.stops::before{content:"";position:absolute;left:17px;top:0;bottom:0;width:8px;border-radius:4px;background:var(--zc)}
+.stop{position:relative}
+.stop button{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:none;border:0;padding:12px 0}
+.node{flex:none;position:relative;z-index:1;width:42px;height:42px;border-radius:50%;background:var(--surface);border:5px solid var(--zc);display:grid;place-items:center;margin-left:0}
+.node svg{width:18px;height:18px;color:var(--zc)}
+.stop.done .node{background:var(--zc)}
+.stop.done .node svg{color:#fff}
+.stop-card{flex:1;display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:12px 14px;transition:border-color .15s, transform .15s}
+.stop button:hover .stop-card{border-color:var(--zc);transform:translateX(3px)}
+.stop-ico{flex:none;width:40px;height:40px;border-radius:10px;background:var(--zt);color:var(--zc);display:grid;place-items:center}
+.stop-ico svg{width:22px;height:22px}
+.stop-text{flex:1;min-width:0}
+.stop-text b{display:block;font-size:17px}
+.stop-text small{display:block;color:var(--muted);font-size:14px;line-height:1.3}
+.chev{width:18px;height:18px;color:var(--muted);flex:none}
+.transfer{margin:6px 0 0 6px;display:flex;align-items:center;gap:10px;color:var(--muted);font-size:14px}
+.transfer i{width:30px;height:30px;border-radius:50%;border:3px dashed var(--line);display:inline-block}
+
+/* station sheet */
+.sheet-back{position:fixed;inset:0;background:rgba(10,18,30,.5);z-index:40;display:none}
+.sheet{position:fixed;z-index:50;left:0;right:0;bottom:0;top:auto;height:94vh;height:94dvh;max-height:94dvh;background:var(--bg);border-radius:22px 22px 0 0;display:none;flex-direction:column;box-shadow:0 -8px 30px rgba(0,0,0,.18);padding-bottom:env(safe-area-inset-bottom,0px)}
+.sheet.on,.sheet-back.on{display:flex}
+.sheet-back.on{display:block}
+@media (min-width:860px){.sheet{left:50%;width:820px;transform:translateX(-50%);top:3%;bottom:3%;height:auto;max-height:none;border-radius:22px}}
+.sheet-head{padding:16px 18px 0;border-bottom:1px solid var(--line);background:var(--surface);border-radius:22px 22px 0 0}
+.sheet-top{display:flex;align-items:flex-start;gap:14px}
+.sheet-ico{flex:none;width:54px;height:54px;border-radius:14px;display:grid;place-items:center;color:#fff}
+.sheet-ico svg{width:28px;height:28px}
+.sheet-title{flex:1;min-width:0}
+.sheet-title .where{font-size:14px;color:var(--muted);font-weight:600}
+.sheet-title h2{font-size:clamp(23px,5vw,30px);margin-top:2px}
+.term{display:inline-flex;align-items:center;gap:6px;margin-top:6px;font-size:14px;font-weight:600;border-radius:999px;padding:3px 10px;border:1.5px solid}
+.tabs-in{display:flex;gap:4px;margin-top:14px}
+.tab-in{border:0;background:none;padding:10px 14px;font-weight:700;color:var(--muted);border-bottom:3px solid transparent;display:inline-flex;gap:7px;align-items:center}
+.tab-in svg{width:18px;height:18px}
+.tab-in[aria-selected="true"]{color:var(--ink);border-color:var(--zc)}
+.sheet-body{flex:1;overflow:auto;padding:20px 18px 30px;-webkit-overflow-scrolling:touch}
+.sheet-foot{display:flex;gap:10px;padding:12px 18px;border-top:1px solid var(--line);background:var(--surface);align-items:center}
+.sheet-foot .count{flex:1;text-align:center;color:var(--muted);font-size:14px;font-weight:600;white-space:nowrap}
+.sheet-foot .btn{white-space:nowrap}
+@media (max-width:600px){
+ .sheet{top:0;height:100vh;height:100dvh;max-height:none;border-radius:0;padding-top:env(safe-area-inset-top,0px)}
+ .sheet-head{border-radius:0;padding:10px 14px 0}
+ .sheet-top{gap:10px;align-items:center}
+ .sheet-ico{width:40px;height:40px;border-radius:10px}
+ .sheet-ico svg{width:22px;height:22px}
+ .sheet-title .where{font-size:12.5px}
+ .sheet-title h2{font-size:21px}
+ .term{font-size:12.5px;padding:2px 9px;margin-top:4px}
+ .tabs-in{margin-top:6px}
+ .tab-in{padding:8px 10px}
+ .sheet-body{padding:14px 12px 24px}
+ .sheet-foot{padding:10px 12px;gap:8px}
+ .sheet-foot .btn{padding:7px 12px}
+ .analogy{font-size:18px;padding:14px}
+ .panel{padding:12px}
+ .task-intro{padding:12px}
+}
+
+
+.analogy{background:var(--zt);border-left:6px solid var(--zc);border-radius:var(--r-md);padding:16px 18px;font-family:var(--serif);font-size:20px;line-height:1.4}
+.analogy small{display:block;font-family:var(--sans);font-size:14px;color:var(--muted);margin-bottom:4px;font-weight:600}
+.points{list-style:none;padding:0;margin:20px 0}
+.points li{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}
+.points li svg{flex:none;width:22px;height:22px;color:var(--zc);margin-top:2px}
+.likes{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:6px;color:var(--muted);font-size:15px}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 12px;font-size:14px;font-weight:600;color:var(--ink)}
+.go-try{margin-top:24px}
+
+/* tasks */
+.task-intro{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:14px 16px;margin-bottom:16px}
+.task-intro svg{flex:none;width:24px;height:24px;color:var(--zc)}
+.task-intro b{display:block}
+.task-intro span{color:var(--muted);font-size:15px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:14px;margin-bottom:14px}
+.panel h4{margin:0 0 10px;font-size:15px;color:var(--muted)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.field{display:flex;flex-direction:column;gap:4px;font-size:14px;font-weight:600;color:var(--muted);flex:1;min-width:140px}
+.field input,.field select{border:1px solid var(--line);background:var(--surface-2);border-radius:var(--r-sm);padding:9px 10px;font-weight:400;color:var(--ink)}
+.code{background:var(--code-bg);color:var(--code-ink);border-radius:var(--r-md);padding:12px 14px;font-family:var(--mono);font-size:14px;line-height:1.55;overflow-x:auto;white-space:pre;margin:10px 0}
+.code .c{color:var(--code-dim)}
+.code .k{color:#9FD3CC}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r-sm);margin:10px 0}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:320px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{background:var(--surface-2);font-weight:700}
+tr:last-child td{border-bottom:0}
+td.mask{color:var(--muted);font-family:var(--mono)}
+tr.bad td{background:var(--bad-t)}
+.choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.choice{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;background:var(--surface);border:2px solid var(--line);border-radius:var(--r-md);padding:12px}
+.choice svg{width:24px;height:24px;color:var(--zc)}
+.choice b{font-size:15px}
+.choice small{color:var(--muted);font-size:13px;line-height:1.3}
+.choice[aria-pressed="true"]{border-color:var(--zc);background:var(--zt)}
+.choice.right{border-color:var(--ok)}
+.choice.wrong{border-color:var(--bad);background:var(--bad-t)}
+.feedback{font-size:15px;font-weight:600;margin:8px 0 0;min-height:1.2em}
+.feedback.ok{color:var(--ok)} .feedback.no{color:var(--bad)}
+.status{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;border-radius:999px;padding:2px 10px;background:var(--surface-2);color:var(--muted)}
+.status.run{background:var(--gold-t);color:var(--gold)}
+.status.ok{background:var(--teal-t);color:var(--ok)}
+.status.fail{background:var(--bad-t);color:var(--bad)}
+.dag{display:flex;flex-direction:column;gap:8px}
+.dag-step{display:flex;align-items:center;gap:10px;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-sm);padding:10px 12px}
+.dag-step .name{flex:1;font-weight:600}
+.dag-arrow{width:2px;height:12px;background:var(--line);margin-left:24px}
+.bar{height:12px;border-radius:6px;background:var(--surface-2);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--zc);width:0;transition:width .6s ease}
+.tree{list-style:none;margin:0;padding-left:0;font-size:15px}
+.tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px dashed var(--line);margin-left:9px}
+.tree button{background:none;border:0;padding:5px 4px;display:inline-flex;align-items:center;gap:7px;font-weight:600}
+.tree svg{width:16px;height:16px;color:var(--zc)}
+.tree .leaf{display:flex;align-items:center;gap:7px;padding:5px 4px;color:var(--muted)}
+.chat{display:flex;flex-direction:column;gap:10px;max-height:340px;overflow:auto;padding:4px}
+.msg{max-width:88%;padding:10px 13px;border-radius:14px;font-size:15px}
+.msg.me{align-self:flex-end;background:var(--zc);color:#fff;border-bottom-right-radius:4px}
+.msg.bot{align-self:flex-start;background:var(--surface-2);border:1px solid var(--line);border-bottom-left-radius:4px}
+.msg .code{font-size:12.5px}
+.chat-input{display:flex;gap:8px;margin-top:10px}
+.chat-input input{flex:1;border:1px solid var(--line);background:var(--surface-2);border-radius:999px;padding:10px 14px}
+.suggest{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.suggest button{border:1px solid var(--zc);color:var(--zc);background:var(--surface);border-radius:999px;padding:5px 12px;font-size:14px;font-weight:600}
+.done-banner{display:none;align-items:center;gap:12px;background:var(--teal-t);border:2px solid var(--teal);border-radius:var(--r-md);padding:12px 14px;margin-top:14px;font-weight:700}
+.done-banner.on{display:flex}
+.done-banner svg{width:26px;height:26px;color:var(--teal);flex:none}
+.slider{width:100%;accent-color:var(--zc)}
+.versions{display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}
+.chart{width:100%;height:auto;display:block}
+.toggle{display:inline-flex;align-items:center;gap:10px;font-weight:600;font-size:15px}
+.toggle{cursor:pointer;position:relative}
+.toggle input{position:absolute;opacity:0;width:1px;height:1px}
+.toggle .sw{flex:none;width:46px;height:26px;border-radius:13px;background:var(--line);position:relative;transition:background .2s}
+.toggle .sw::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.toggle input:checked+.sw{background:var(--zc)}
+.toggle input:checked+.sw::after{left:23px}
+.toggle input:focus-visible+.sw{outline:3px solid var(--teal);outline-offset:2px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--surface-2)}
+.seg button{border:0;background:none;padding:6px 14px;font-size:14px;font-weight:600;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--zc);color:#fff}
+.typer{min-height:160px}
+.spin{width:16px;height:16px;border:2.5px solid currentColor;border-right-color:transparent;border-radius:50%;display:inline-block;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* glossary */
+.page-h{padding:28px 0 10px}
+.page-h h1{font-size:clamp(30px,7vw,44px)}
+.page-h p{color:var(--muted);margin:8px 0 0}
+.search{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:10px 16px;margin:16px 0}
+.search svg{width:20px;height:20px;color:var(--muted)}
+.search input{flex:1;border:0;background:none;outline:none;font-size:17px}
+.gloss{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.gloss li{background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--zc);border-radius:var(--r-md);padding:12px 14px}
+.gloss .pair{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-weight:700}
+.gloss .pair svg{width:16px;height:16px;color:var(--muted)}
+.gloss .ind{color:var(--muted);font-weight:600}
+.gloss p{margin:4px 0 0;font-size:15px;color:var(--muted)}
+.gloss button{background:none;border:0;padding:0;color:var(--zc);font-weight:700;font-size:14px;margin-top:6px}
+
+/* progress */
+.badges{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:16px}
+.badge{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:16px;text-align:center}
+.badge .medal{width:64px;height:64px;margin:0 auto 8px;border-radius:50%;display:grid;place-items:center;border:4px solid var(--line);color:var(--line)}
+.badge .medal svg{width:30px;height:30px}
+.badge.earned .medal{border-color:var(--zc);background:var(--zt);color:var(--zc)}
+.badge b{display:block}
+.badge small{color:var(--muted)}
+.ticket{margin-top:24px;background:var(--surface);border:2px dashed var(--line);border-radius:var(--r-lg);padding:20px;position:relative}
+.ticket h3{font-size:24px}
+.ticket .name-line{font-family:var(--serif);font-size:28px;border-bottom:2px solid var(--ink);padding:6px 0;margin:10px 0;min-height:48px}
+
+/* bottom nav */
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+.nav .wrap{display:flex;justify-content:space-around}
+.nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;border:0;background:none;padding:9px 0 10px;font-size:13px;font-weight:700;color:var(--muted)}
+.nav button svg{width:24px;height:24px}
+.nav button[aria-current="page"]{color:var(--teal)}
+
+.toast{position:fixed;left:50%;top:calc(70px + env(safe-area-inset-top,0px));transform:translateX(-50%) translateY(-20px);white-space:nowrap;z-index:60;background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:999px;font-weight:700;display:flex;gap:10px;align-items:center;opacity:0;pointer-events:none;transition:all .3s}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast svg{width:20px;height:20px}
+footer.credit{color:var(--muted);font-size:14px;padding:30px 0 10px;border-top:1px solid var(--line);margin-top:40px}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}.hero-line path{stroke-dashoffset:0}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<defs>
+<symbol id="i-notebook" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="15" height="18" rx="2"/><path d="M9 3v18M3 7h4M3 12h4M3 17h4M12 8h5M12 12h5"/></symbol>
+<symbol id="i-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 8l10 5 10-5-10-5Z"/><path d="m2 13 10 5 10-5"/><path d="m2 18 10 5 10-5"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3Z"/><circle cx="12" cy="11" r="2.5"/><path d="M12 13.5V17"/></symbol>
+<symbol id="i-cpu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="2"/><rect x="9.5" y="9.5" width="5" height="5"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></symbol>
+<symbol id="i-plug" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v5M15 2v5M6 7h12v4a6 6 0 0 1-12 0V7Z"/><path d="M12 17v5"/></symbol>
+<symbol id="i-flow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="6" height="5" rx="1"/><rect x="16" y="4" width="6" height="5" rx="1"/><rect x="9" y="15" width="6" height="5" rx="1"/><path d="M8 6.5h8M5 9v3a3 3 0 0 0 3 3h1M19 9v3a3 3 0 0 1-3 3h-1"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6M12 2v3"/></symbol>
+<symbol id="i-db" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></symbol>
+<symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6"/><rect x="12" y="8" width="3" height="10"/><rect x="17" y="5" width="3" height="13"/></symbol>
+<symbol id="i-genie" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-5A8 8 0 1 1 21 12Z"/><path d="M12 8.5l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9.9-2.1Z"/></symbol>
+<symbol id="i-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 7-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></symbol>
+<symbol id="i-flask" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2h6M10 2v7L4.5 18.5A2 2 0 0 0 6.2 21.5h11.6a2 2 0 0 0 1.7-3L14 9V2"/><path d="M7 15h10"/></symbol>
+<symbol id="i-bot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 8V4M9 4h6"/><circle cx="9" cy="14" r="1.3"/><circle cx="15" cy="14" r="1.3"/><path d="M2 13v3M22 13v3"/></symbol>
+<symbol id="i-share" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></symbol>
+<symbol id="i-app" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M7 6.5h.01M10 6.5h.01"/><path d="M7 13h6M7 16h4"/></symbol>
+<symbol id="i-gauge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18a9 9 0 1 1 16 0"/><path d="m12 13 4-4"/><circle cx="12" cy="13" r="1.5"/></symbol>
+<symbol id="i-map" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="6" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M7.5 6H14a3.5 3.5 0 0 1 0 7h-4a3.5 3.5 0 0 0 0 7h6.5"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5v-17Z"/><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/></symbol>
+<symbol id="i-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v5a5 5 0 0 1-10 0V4Z"/><path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4M12 14v4M8 21h8M9 18h6"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></symbol>
+<symbol id="i-check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></symbol>
+<symbol id="i-play" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5-13-7.5Z"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+<symbol id="i-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 5-7 7 7 7"/></symbol>
+<symbol id="i-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5 7 7-7 7"/></symbol>
+<symbol id="i-bulb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3Z"/></symbol>
+<symbol id="i-hand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 13V5.5a1.5 1.5 0 0 1 3 0V12M11 11V4.5a1.5 1.5 0 0 1 3 0V12M14 11V6.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-.5a6 6 0 0 1-5-2.7L3 14.5a1.6 1.6 0 0 1 2.6-1.8L8 15"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+<symbol id="i-swap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h14l-3-3M20 16H6l3 3"/></symbol>
+<symbol id="i-folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5H9l2 2.5h8.5A1.5 1.5 0 0 1 21 9v9.5a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.5v-12Z"/></symbol>
+<symbol id="i-table" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 10v10M15 10v10"/></symbol>
+<symbol id="i-cloud" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a4.5 4.5 0 0 1-.6-9A6 6 0 0 1 18 9.5a4 4 0 0 1-.5 8.5H7Z"/></symbol>
+<symbol id="i-stream" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 7c3 0 3 2 6 2s3-2 6-2 3 2 6 2M3 12c3 0 3 2 6 2s3-2 6-2 3 2 6 2M3 17c3 0 3 2 6 2s3-2 6-2 3 2 6 2"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 2h8l5 5v15H6V2Z"/><path d="M14 2v5h5M9 13h7M9 17h7"/></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5Z"/></symbol>
+</defs>
+</svg>
+
+<header class="top">
+  <div class="wrap">
+    <button class="brand" id="homeBtn" aria-label="Back to the map">
+      <svg class="roundel" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="16" fill="none" stroke="var(--teal)" stroke-width="6"/><rect x="2" y="16" width="36" height="8" rx="2" fill="var(--ink)"/></svg>
+      <span class="brand-long">The Databricks Line</span><span class="brand-short">Databricks Line</span>
+    </button>
+    <span class="spacer"></span>
+    <span class="progress-pill" aria-live="polite"><svg class="ring" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15" fill="none" stroke="var(--line)" stroke-width="5"/><circle id="ringArc" cx="18" cy="18" r="15" fill="none" stroke="var(--teal)" stroke-width="5" stroke-linecap="round" stroke-dasharray="94.25" stroke-dashoffset="94.25"/></svg><span id="progText">0 of 16</span></span>
+    <button class="icon-btn" id="themeBtn" aria-label="Switch light or dark theme"><svg><use href="#i-moon"/></svg></button>
+  </div>
+</header>
+
+<main>
+<section class="view on" id="v-map" aria-labelledby="mapTitle">
+  <div class="wrap">
+    <div class="hero">
+      <h1 id="mapTitle">Ride the whole platform, one stop at a time.</h1>
+      <p>Sixteen stops across five lines, from your first notebook to AI agents. Each stop explains one part of Databricks in plain English, names its industry term, and lets you try a small hands-on task.</p>
+      <svg class="hero-line" viewBox="0 0 740 56" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M10 28 H150" stroke="var(--teal)" stroke-width="10" stroke-linecap="round" fill="none"/>
+        <path d="M150 28 H300" stroke="var(--gold)" stroke-width="10" stroke-linecap="round" fill="none" style="animation-delay:.25s"/>
+        <path d="M300 28 H450" stroke="var(--steel)" stroke-width="10" stroke-linecap="round" fill="none" style="animation-delay:.5s"/>
+        <path d="M450 28 H600" stroke="var(--bronze)" stroke-width="10" stroke-linecap="round" fill="none" style="animation-delay:.75s"/>
+        <path d="M600 28 H730" stroke="var(--plum)" stroke-width="10" stroke-linecap="round" fill="none" style="animation-delay:1s"/>
+        <g fill="var(--surface)" stroke="var(--ink)" stroke-width="4"><circle cx="10" cy="28" r="9"/><circle cx="150" cy="28" r="9"/><circle cx="300" cy="28" r="9"/><circle cx="450" cy="28" r="9"/><circle cx="600" cy="28" r="9"/><circle cx="730" cy="28" r="9"/></g>
+      </svg>
+      <div class="hero-actions">
+        <button class="btn teal" id="startBtn"><svg><use href="#i-play"/></svg><span id="startLabel">Start at stop 1</span></button>
+        <button class="btn ghost" data-nav="v-gloss"><svg><use href="#i-book"/></svg>Industry terms</button>
+      </div>
+      <div class="legend" id="legend"></div>
+    </div>
+    <div id="map"></div>
+    <footer class="credit">
+      Created by Vijini Tennekoon. An independent learning simulation: tasks run in your browser with sample data and are not connected to Databricks. Feature availability varies by cloud, region and release stage.
+    </footer>
+  </div>
+</section>
+
+<section class="view" id="v-gloss" aria-labelledby="glossTitle">
+  <div class="wrap">
+    <div class="page-h">
+      <h1 id="glossTitle">Industry terms, translated</h1>
+      <p>What the rest of the industry calls it, and what Databricks calls it.</p>
+    </div>
+    <label class="search"><svg aria-hidden="true"><use href="#i-search"/></svg><span class="sr">Search terms</span><input id="glossSearch" type="search" placeholder="Try 'warehouse', 'CDC' or 'orchestration'"></label>
+    <ul class="gloss" id="glossList"></ul>
+  </div>
+</section>
+
+<section class="view" id="v-prog" aria-labelledby="progTitle">
+  <div class="wrap">
+    <div class="page-h">
+      <h1 id="progTitle">Your journey</h1>
+      <p id="progSub">Finish every stop on a line to earn its badge.</p>
+    </div>
+    <div class="badges" id="badges"></div>
+    <div class="ticket" id="ticket">
+      <h3>Explorer's pass</h3>
+      <p style="color:var(--muted);margin:6px 0 0" id="ticketText">Complete all 16 stops to stamp your pass.</p>
+      <label class="field" style="margin-top:14px">Name on the pass<input id="passName" placeholder="Your name" maxlength="40"></label>
+      <div class="name-line" id="passOut"></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn small ghost" id="resetBtn">Reset progress</button>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<div class="sheet-back" id="sheetBack"></div>
+<section class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sTitle">
+  <div class="sheet-head">
+    <div class="sheet-top">
+      <div class="sheet-ico" id="sIco"></div>
+      <div class="sheet-title">
+        <div class="where" id="sWhere"></div>
+        <h2 id="sTitle"></h2>
+        <span class="term" id="sTerm"></span>
+      </div>
+      <button class="icon-btn" id="sClose" aria-label="Close stop"><svg><use href="#i-x"/></svg></button>
+    </div>
+    <div class="tabs-in" role="tablist">
+      <button class="tab-in" role="tab" id="tLearn" aria-selected="true"><svg><use href="#i-bulb"/></svg>Learn</button>
+      <button class="tab-in" role="tab" id="tTry" aria-selected="false"><svg><use href="#i-hand"/></svg>Try it</button>
+    </div>
+  </div>
+  <div class="sheet-body" id="sBody" role="tabpanel"></div>
+  <div class="sheet-foot">
+    <button class="btn small ghost" id="sPrev"><svg><use href="#i-left"/></svg>Previous</button>
+    <span class="count" id="sCount"></span>
+    <button class="btn small" id="sNext">Next<svg><use href="#i-right"/></svg></button>
+  </div>
+</section>
+
+<nav class="nav" aria-label="Main">
+  <div class="wrap">
+    <button data-nav="v-map" aria-current="page"><svg><use href="#i-map"/></svg>Map</button>
+    <button data-nav="v-gloss"><svg><use href="#i-book"/></svg>Terms</button>
+    <button data-nav="v-prog"><svg><use href="#i-trophy"/></svg>Journey</button>
+  </div>
+</nav>
+<div class="toast" id="toast" role="status"><svg><use href="#i-check-circle"/></svg><span id="toastText"></span></div>
+
+<script>
+"use strict";
+const $=s=>document.querySelector(s);
+const icon=(id,cls="")=>`<svg class="${cls}" aria-hidden="true"><use href="#i-${id}"/></svg>`;
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+const ZONES=[
+ {id:"found",name:"Foundations line",short:"Foundations",c:"--teal",t:"--teal-t",desc:"Where you work, how data is stored, who can see it and what runs it."},
+ {id:"eng",name:"Data engineering line",short:"Engineering",c:"--gold",t:"--gold-t",desc:"Getting data in, shaping it and running it on time."},
+ {id:"ana",name:"Analytics line",short:"Analytics",c:"--steel",t:"--steel-t",desc:"Turning tables into answers people can use."},
+ {id:"ai",name:"AI line",short:"AI",c:"--bronze",t:"--bronze-t",desc:"Building with AI, and AI that builds with you."},
+ {id:"ops",name:"Run the business line",short:"Business",c:"--plum",t:"--plum-t",desc:"Sharing, operational apps and keeping costs in check."}
+];
+
+const S=[
+{id:"ws",z:"found",ic:"notebook",name:"Workspace and notebooks",term:"Collaborative development environment",
+ an:"Your team's shared office. Notebooks, queries, files and dashboards live here, organised in folders and connected to Git.",
+ pts:["Notebooks mix Python, SQL, Scala and notes in one document","Co-edit in real time and leave comments","Git folders keep code under version control","An AI assistant is built into the editor"],
+ like:["Jupyter","VS Code with Git"],task:"Create a notebook and run your first cell"},
+{id:"delta",z:"found",ic:"layers",name:"Delta Lake tables",term:"Open table format with ACID transactions",
+ an:"A spreadsheet that never loses an edit. Every change becomes a new version you can read or roll back to.",
+ pts:["ACID transactions (all-or-nothing writes) on low-cost cloud storage","Time travel: query or restore older versions","Schema enforcement blocks unexpected columns","Open format, readable by other engines"],
+ like:["Apache Iceberg","Apache Hudi"],task:"Undo a bad update with time travel"},
+{id:"uc",z:"found",ic:"shield",name:"Unity Catalog",term:"Data catalog and governance",
+ an:"The security desk and building directory in one. It knows where every table lives and who's allowed to open it.",
+ pts:["One permission model across every workspace","Three-part names: catalog.schema.table","Automatic lineage, down to the column","Row filters and column masks for sensitive data"],
+ like:["Microsoft Purview","Collibra","Hive metastore"],task:"Give the analysts group read access"},
+{id:"comp",z:"found",ic:"cpu",name:"Compute",term:"Compute engine: clusters and serverless",
+ an:"The engine room. Rent your own machines (classic clusters) or hail a ride that's already running (serverless).",
+ pts:["Serverless starts fast with nothing to configure","Classic clusters give full control, Scala, R and GPUs","SQL warehouses are compute tuned for SQL and BI","Photon, a native engine, speeds up SQL and DataFrames"],
+ like:["Spark on EMR","Synapse Spark pools"],task:"Match each workload to the right compute"},
+{id:"conn",z:"eng",ic:"plug",name:"Lakeflow Connect",term:"Data ingestion and CDC connectors",
+ an:"The loading dock. Deliveries arrive from apps, databases and files, and only new deliveries get unpacked.",
+ pts:["Managed connectors for SaaS apps and databases","CDC (change data capture) moves only what changed","Auto Loader picks up new files exactly once","Zerobus Ingest lets apps push events directly"],
+ like:["ADF Copy activity","Fivetran"],task:"Ingest data from a source"},
+{id:"pipe",z:"eng",ic:"flow",name:"Declarative pipelines and Designer",term:"ETL and data transformation",
+ an:"A recipe, not a cooking diary. You describe the dish, and the kitchen works out the order, the timing and the clean-up.",
+ pts:["Declare each table; the engine handles order and retries","Streaming tables and materialized views","Expectations enforce data quality rules","Lakeflow Designer: drag-and-drop pipelines for analysts"],
+ like:["dbt","ADF mapping data flows"],task:"Build a bronze to gold pipeline"},
+{id:"jobs",z:"eng",ic:"clock",name:"Lakeflow Jobs",term:"Workflow orchestration",
+ an:"The conductor. It decides when each instrument plays, and what happens if one misses a note.",
+ pts:["Chain pipelines, notebooks, SQL and more as tasks","Trigger on a schedule, file arrival or table update","Branch with if/else and loop with for each","Retries, alerts and repair runs built in"],
+ like:["Apache Airflow","ADF pipelines"],task:"Run a job and repair a failed task"},
+{id:"sql",z:"ana",ic:"db",name:"Databricks SQL",term:"Data warehouse",
+ an:"The reading room. Fast SQL on the very tables engineers built, with no copy into a separate system.",
+ pts:["Serverless SQL warehouses","A familiar SQL editor with history and sharing","Connects to Power BI, Tableau and other BI tools","Metric views define business measures once"],
+ like:["Snowflake","Synapse","BigQuery"],task:"Query the warehouse"},
+{id:"dash",z:"ana",ic:"chart",name:"AI/BI dashboards",term:"Business intelligence (BI) and visualisation",
+ an:"The shop window. Clear charts anyone can read, built on governed data.",
+ pts:["Drag-and-drop charts and filters","Describe a chart in words and AI drafts it","Schedules and email subscriptions","Viewers only see data they're allowed to"],
+ like:["Power BI","Tableau"],task:"Build and publish a dashboard chart"},
+{id:"genie",z:"ana",ic:"genie",name:"Genie",term:"Conversational analytics",
+ an:"An analyst you can message. Ask a question in plain English and get the answer, plus the SQL behind it.",
+ pts:["Answers questions in everyday language","Shows the SQL it wrote so you can check it","Learns business terms from table descriptions","Applies each person's own permissions"],
+ like:["Copilot in Power BI","ThoughtSpot"],task:"Ask Genie a question"},
+{id:"gcode",z:"ai",ic:"code",name:"Genie Code",term:"AI coding assistant",
+ an:"A pair programmer who already knows your catalog: your tables, columns and lineage.",
+ pts:["Writes, runs and debugs notebook code","Builds pipelines and dashboards from a description","Uses Unity Catalog metadata as context","No extra licence; you pay for the compute used"],
+ like:["GitHub Copilot","Claude Code"],task:"Generate a pipeline from a prompt"},
+{id:"ml",z:"ai",ic:"flask",name:"MLflow and Model Serving",term:"MLOps: machine learning lifecycle",
+ an:"A lab notebook plus a factory line. Track every experiment, then ship the winner as a live service.",
+ pts:["MLflow tracks parameters, metrics and models","Models are registered and governed in Unity Catalog","Model Serving turns a model into an API endpoint","Monitor predictions after release"],
+ like:["Azure Machine Learning","SageMaker"],task:"Train, register and serve a model"},
+{id:"agent",z:"ai",ic:"bot",name:"AI agents",term:"Generative and agentic AI",
+ an:"A new colleague who reads your documents and uses your tools, with a supervisor checking the work.",
+ pts:["Build agents grounded in your own data","Vector search finds the right passages in documents","Evaluate quality before anything goes live","An AI gateway governs usage, cost and guardrails"],
+ like:["Azure AI Foundry","LangChain"],task:"Assemble a customer support agent"},
+{id:"share",z:"ops",ic:"share",name:"Sharing and Marketplace",term:"Data sharing and data exchange",
+ an:"Lending a book without photocopying it. Partners read the live data, and you can take it back at any time.",
+ pts:["OpenSharing: live data to any platform, no copies","Marketplace for datasets, models and apps","Clean Rooms for joint analysis without exposing raw data","Revoke access instantly; every read is audited"],
+ like:["Snowflake data sharing","AWS Data Exchange"],task:"Share a table with a partner"},
+{id:"lb",z:"ops",ic:"app",name:"Lakebase and Apps",term:"Operational database (OLTP) and internal apps",
+ an:"The shop till beside the accounts office. Sales are recorded live, and the books update without anyone retyping them.",
+ pts:["Lakebase: serverless Postgres for application data","Databricks Apps host internal tools securely","Operational and analytical data on one platform","The same governance as everything else"],
+ like:["Azure Database for PostgreSQL","Power Apps"],task:"Save an order from an app"},
+{id:"obs",z:"ops",ic:"gauge",name:"Observability and cost",term:"Monitoring, audit and FinOps",
+ an:"The control tower. Every flight, every delay and every fuel bill, on one screen.",
+ pts:["System tables for audit, billing, lineage and queries","Budgets and usage dashboards","Data quality monitoring flags stale or missing data","Everything is queryable with plain SQL"],
+ like:["Azure Monitor","Cost Management"],task:"Find where the money went"}
+];
+
+const GLOSS=[
+ ["Data lakehouse","Databricks platform","Warehouse speed and governance on open, low-cost lake storage.","ws"],
+ ["Notebook / IDE","Workspace and notebooks","Where code, queries and notes are written and shared.","ws"],
+ ["Table format, ACID tables","Delta Lake","Reliable, versioned tables on cloud storage.","delta"],
+ ["Time travel, versioning","Delta history and RESTORE","Read or roll back to an earlier version of a table.","delta"],
+ ["Data catalog","Unity Catalog","Find data and see where it came from.","uc"],
+ ["Data governance, access control","Unity Catalog privileges and ABAC","Who can see what, set once, enforced everywhere. ABAC means attribute-based access control.","uc"],
+ ["Data lineage","Unity Catalog lineage","Automatic map of how data flows between tables and jobs.","uc"],
+ ["Data masking, row-level security","Column masks and row filters","Hide sensitive values or rows depending on who asks.","uc"],
+ ["Compute cluster","Classic compute","Machines in your own cloud account that you configure.","comp"],
+ ["Serverless compute","Serverless","Compute Databricks runs for you, ready in moments.","comp"],
+ ["Data ingestion, ELT connectors","Lakeflow Connect","Bring data in from apps, databases and files.","conn"],
+ ["CDC (change data capture)","Managed database connectors","Copy only the rows that changed in the source.","conn"],
+ ["File ingestion","Auto Loader","Process new files in storage exactly once.","conn"],
+ ["ETL / ELT pipeline","Lakeflow Spark Declarative Pipelines","Declare tables and let the engine run the steps.","pipe"],
+ ["No-code ETL","Lakeflow Designer","Visual, drag-and-drop pipeline building.","pipe"],
+ ["Data quality rules","Expectations","Checks that warn, drop bad rows or stop a pipeline.","pipe"],
+ ["SCD Type 2 (history tracking)","AUTO CDC","Keep every version of a changing record. SCD means slowly changing dimension.","pipe"],
+ ["Medallion architecture","Bronze, silver, gold layers","Raw, cleaned and business-ready data, in that order.","pipe"],
+ ["Workflow orchestration, scheduler","Lakeflow Jobs","Run tasks in order, on time, with retries.","jobs"],
+ ["Data warehouse","Databricks SQL","SQL analytics on lakehouse tables.","sql"],
+ ["Semantic layer","Metric views","Business measures defined once, reused everywhere.","sql"],
+ ["BI dashboards","AI/BI dashboards","Charts and reports built into the platform.","dash"],
+ ["Natural-language query, conversational BI","Genie","Ask questions in plain English.","genie"],
+ ["AI coding assistant","Genie Code","AI that writes, runs and fixes code and pipelines.","gcode"],
+ ["MLOps","MLflow","Track, register and manage machine learning models.","ml"],
+ ["Model deployment, inference API","Model Serving","Turn a model into a live endpoint.","ml"],
+ ["RAG, AI agents","Agent Bricks, Vector Search","AI that retrieves your data and takes actions. RAG means retrieval-augmented generation.","agent"],
+ ["AI gateway, LLM governance","AI Gateway","Control access, usage and cost of AI models. LLM means large language model.","agent"],
+ ["Data sharing, data exchange","OpenSharing, Marketplace","Share live data without copying it.","share"],
+ ["Data clean room","Clean Rooms","Analyse data together without revealing the raw records.","share"],
+ ["OLTP database","Lakebase","Fast transactional database for apps. OLTP means online transaction processing.","lb"],
+ ["Internal tools platform","Databricks Apps","Host data apps next to your data.","lb"],
+ ["Observability, audit logs","System tables","Platform activity, usage and lineage as SQL tables.","obs"],
+ ["FinOps, cost management","Billing system tables and budgets","See and control what you spend.","obs"]
+];
+
+/* ---------- state (in memory) ---------- */
+const done=new Set();
+let cur=0,tab="learn";
+const zoneOf=s=>ZONES.find(z=>z.id===s.z);
+const cvar=n=>`var(${n})`;
+
+function renderLegend(){
+ $("#legend").innerHTML=ZONES.map(z=>`<span><i style="background:${cvar(z.c)}"></i>${z.short}</span>`).join("");
+}
+function renderMap(){
+ let html="",n=0;
+ ZONES.forEach((z,zi)=>{
+  const stops=S.filter(s=>s.z===z.id);
+  html+=`<section class="zone" style="--zc:${cvar(z.c)};--zt:${cvar(z.t)}">
+   <div class="zone-head"><span class="zone-badge" style="background:${cvar(z.c)}">${zi+1}</span><div><h2>${z.name}</h2><p>${z.desc}</p></div></div>
+   <ol class="stops">`;
+  stops.forEach(s=>{
+   const i=S.indexOf(s); n++;
+   html+=`<li class="stop ${done.has(s.id)?"done":""}"><button data-open="${i}" aria-label="Stop ${i+1}: ${esc(s.name)}${done.has(s.id)?", completed":""}">
+     <span class="node">${done.has(s.id)?icon("check"):""}</span>
+     <span class="stop-card"><span class="stop-ico">${icon(s.ic)}</span><span class="stop-text"><b>${esc(s.name)}</b><small>${esc(s.term)}</small></span>${icon("right","chev")}</span>
+   </button></li>`;
+  });
+  html+=`</ol>`;
+  if(zi<ZONES.length-1) html+=`<div class="transfer"><i></i>Change here for the ${ZONES[zi+1].name.toLowerCase()}</div>`;
+  html+=`</section>`;
+ });
+ $("#map").innerHTML=html;
+}
+function renderProgress(){
+ const k=done.size;
+ $("#progText").textContent=`${k} of ${S.length}`;
+ $("#ringArc").setAttribute("stroke-dashoffset",(94.25*(1-k/S.length)).toFixed(2));
+ const next=S.findIndex(s=>!done.has(s.id));
+ $("#startLabel").textContent=k===0?"Start at stop 1":(next<0?"Revisit stop 1":`Continue at stop ${next+1}`);
+ $("#badges").innerHTML=ZONES.map(z=>{
+  const st=S.filter(s=>s.z===z.id),d=st.filter(s=>done.has(s.id)).length,earned=d===st.length;
+  return `<div class="badge ${earned?"earned":""}" style="--zc:${cvar(z.c)};--zt:${cvar(z.t)}"><div class="medal">${icon(earned?"trophy":"map")}</div><b>${z.short}</b><small>${d} of ${st.length} stops</small></div>`;
+ }).join("");
+ const all=k===S.length;
+ $("#ticketText").textContent=all?"Every stop visited and every task complete. Your pass is stamped.":`Complete all ${S.length} stops to stamp your pass. ${S.length-k} to go.`;
+ $("#ticket").style.borderColor=all?"var(--teal)":"var(--line)";
+ $("#ticket").style.borderStyle=all?"solid":"dashed";
+ updatePass();
+}
+function updatePass(){
+ const nm=$("#passName").value.trim();
+ $("#passOut").textContent=done.size===S.length?(nm||"Your name here"):"";
+}
+function renderGloss(q=""){
+ q=q.toLowerCase();
+ const items=GLOSS.filter(g=>(g[0]+g[1]+g[2]).toLowerCase().includes(q));
+ $("#glossList").innerHTML=items.length?items.map(g=>{
+  const s=S.find(x=>x.id===g[3]),z=zoneOf(s);
+  return `<li style="--zc:${cvar(z.c)}"><div class="pair"><span class="ind">${esc(g[0])}</span>${icon("swap")}<span>${esc(g[1])}</span></div><p>${esc(g[2])}</p><button data-open="${S.indexOf(s)}">Open stop: ${esc(s.name)}</button></li>`;
+ }).join(""):`<li style="--zc:var(--line)"><b>No matching terms.</b><p>Try a broader word such as "data", "AI" or "pipeline".</p></li>`;
+}
+
+/* ---------- navigation ---------- */
+function show(view){
+ document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id===view));
+ document.querySelectorAll(".nav button").forEach(b=>{if(b.dataset.nav===view)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});
+ window.scrollTo(0,0);
+}
+let lastFocus=null;
+function openStop(i,t="learn"){
+ lastFocus=document.activeElement;
+ cur=i;tab=t;
+ $("#sheet").classList.add("on");$("#sheetBack").classList.add("on");
+ document.body.style.overflow="hidden";
+ renderStop();
+ $("#sClose").focus();
+}
+function closeStop(){
+ $("#sheet").classList.remove("on");$("#sheetBack").classList.remove("on");
+ document.body.style.overflow="";
+ renderMap();
+ if(lastFocus&&document.body.contains(lastFocus))lastFocus.focus();
+}
+function renderStop(){
+ const s=S[cur],z=zoneOf(s);
+ const sh=$("#sheet");
+ sh.style.setProperty("--zc",cvar(z.c));sh.style.setProperty("--zt",cvar(z.t));
+ $("#sIco").style.background=cvar(z.c);$("#sIco").innerHTML=icon(s.ic);
+ $("#sWhere").textContent=`Stop ${cur+1} on the ${z.name.toLowerCase()}`;
+ $("#sTitle").textContent=s.name;
+ const t=$("#sTerm");t.innerHTML=`<span>Industry term: ${esc(s.term)}</span>`;t.style.borderColor=cvar(z.c);t.style.color=cvar(z.c);
+  $("#tLearn").setAttribute("aria-selected",tab==="learn");$("#tTry").setAttribute("aria-selected",tab==="try");
+ $("#sCount").textContent=`${cur+1} / ${S.length}${done.has(s.id)?"  ✓":""}`;
+ $("#sPrev").disabled=cur===0;
+ $("#sNext").innerHTML=cur===S.length-1?`Finish${icon("check")}`:`Next${icon("right")}`;
+ const body=$("#sBody");body.scrollTop=0;
+ if(tab==="learn"){
+  body.innerHTML=`<div class="analogy"><small>Think of it as</small>${esc(s.an)}</div>
+  <ul class="points">${s.pts.map(p=>`<li>${icon("check-circle")}<span>${esc(p)}</span></li>`).join("")}</ul>
+  <div class="likes"><span>If you've used</span>${s.like.map(l=>`<span class="chip">${esc(l)}</span>`).join("")}<span>you'll feel at home.</span></div>
+  <button class="btn teal go-try" id="goTry">${icon("hand")}Try it: ${esc(s.task.toLowerCase())}</button>`;
+  $("#goTry").onclick=()=>{tab="try";renderStop();};
+ }else{
+  body.innerHTML=`<div class="task-intro">${icon("hand")}<div><b>${esc(s.task)}</b><span>A safe simulation with sample data. Nothing here touches a real workspace.</span></div></div><div id="taskArea"></div>
+  <div class="done-banner ${done.has(s.id)?"on":""}" id="doneBanner">${icon("check-circle")}<span>Stop complete. ${cur<S.length-1?"Head to the next stop when you're ready.":"That's the end of the line."}</span></div>`;
+  TASKS[s.id]($("#taskArea"),()=>complete(s.id));
+ }
+}
+function complete(id){
+ if(!done.has(id)){done.add(id);toast(done.size===S.length?"Every stop complete. Your pass is stamped.":"Stop complete");}
+ const b=$("#doneBanner");if(b)b.classList.add("on");
+ $("#sCount").textContent=`${cur+1} / ${S.length}  ✓`;
+ renderProgress();
+}
+let tt;
+function toast(msg){$("#toastText").textContent=msg;$("#toast").classList.add("on");clearTimeout(tt);tt=setTimeout(()=>$("#toast").classList.remove("on"),2200);}
+
+/* ---------- helpers for tasks ---------- */
+const ORDERS=[
+ {id:1001,date:"2026-10-01",region:"North",product:"Laptop",qty:2,amount:2400,email:"amal@example.com"},
+ {id:1002,date:"2026-10-01",region:"South",product:"Phone",qty:1,amount:800,email:"bina@example.com"},
+ {id:1003,date:"2026-10-02",region:"West",product:"Tablet",qty:3,amount:1350,email:"chen@example.com"},
+ {id:1004,date:"2026-10-02",region:"North",product:"Phone",qty:2,amount:1600,email:"dev@example.com"},
+ {id:1005,date:"2026-10-03",region:"East",product:"Laptop",qty:1,amount:1200,email:"esha@example.com"},
+ {id:1006,date:"2026-10-03",region:"South",product:"Tablet",qty:2,amount:900,email:"farah@example.com"},
+ {id:1007,date:"2026-10-04",region:"West",product:"Laptop",qty:1,amount:1250,email:"gita@example.com"},
+ {id:1008,date:"2026-10-04",region:"East",product:"Phone",qty:3,amount:2350,email:"hari@example.com"}
+];
+function tbl(rows,cols,opts={}){
+ return `<div class="tbl-wrap"><table><thead><tr>${cols.map(c=>`<th>${esc(c)}</th>`).join("")}</tr></thead><tbody>${rows.map((r,i)=>`<tr class="${opts.bad&&opts.bad(r)?"bad":""}">${cols.map(c=>{let v=r[c];if(opts.mask&&opts.mask.includes(c))return `<td class="mask">${"•".repeat(6)}@•••</td>`;return `<td>${esc(v===undefined||v===null?"null":v)}</td>`}).join("")}</tr>`).join("")}</tbody></table></div>`;
+}
+function hl(sql){
+ return esc(sql).split("\n").map(l=>l.trim().startsWith("--")?`<span class="c">${l}</span>`:l.replace(/\b(SELECT|FROM|WHERE|GROUP BY|ORDER BY|CREATE OR REFRESH|STREAMING TABLE|MATERIALIZED VIEW|AS|GRANT|ON|TO|CATALOG|SCHEMA|TABLE|USE|RESTORE|VERSION|OF|SUM|COUNT|DESC|LIMIT|CONSTRAINT|EXPECT|ON VIOLATION|DROP ROW|SHARE|RECIPIENT|ALTER|ADD|CREATE|INSERT INTO|VALUES|STREAM|AND|JOIN)\b/g,'<span class="k">$1</span>')).join("\n");
+}
+function bars(data,{h=200,fmt=v=>v}={}){
+ const max=Math.max(...data.map(d=>d[1]))||1,w=100/data.length;
+ return `<svg class="chart" viewBox="0 0 400 ${h+40}" role="img" aria-label="Bar chart">${data.map((d,i)=>{const bh=(d[1]/max)*h,x=i*(400/data.length)+10,bw=400/data.length-20;
+  return `<rect x="${x}" y="${h-bh+10}" width="${bw}" height="${bh}" rx="4" fill="var(--zc)"/><text x="${x+bw/2}" y="${h-bh+4}" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">${fmt(d[1])}</text><text x="${x+bw/2}" y="${h+30}" text-anchor="middle" font-size="13" fill="var(--muted)">${esc(d[0])}</text>`}).join("")}</svg>`;
+}
+function line(data,{h=200,fmt=v=>v}={}){
+ const max=Math.max(...data.map(d=>d[1]))||1,step=360/(data.length-1||1);
+ const pts=data.map((d,i)=>[20+i*step,h+10-(d[1]/max)*h]);
+ return `<svg class="chart" viewBox="0 0 400 ${h+40}" role="img" aria-label="Line chart"><polyline points="${pts.map(p=>p.join(",")).join(" ")}" fill="none" stroke="var(--zc)" stroke-width="4" stroke-linejoin="round"/>${pts.map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="6" fill="var(--surface)" stroke="var(--zc)" stroke-width="3"/><text x="${p[0]}" y="${p[1]-12}" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink)">${fmt(data[i][1])}</text><text x="${p[0]}" y="${h+32}" text-anchor="middle" font-size="12" fill="var(--muted)">${esc(data[i][0])}</text>`).join("")}</svg>`;
+}
+const money=v=>"$"+v.toLocaleString();
+const group=(rows,k,v)=>{const m={};rows.forEach(r=>m[r[k]]=(m[r[k]]||0)+(v?r[v]:1));return Object.entries(m)};
+
+/* ---------- the 16 tasks ---------- */
+const TASKS={
+ws(el,ok){
+ el.innerHTML=`<div class="panel"><h4>1. Name your notebook</h4><div class="row"><label class="field">Notebook name<input id="nbName" value="my_first_notebook"></label><label class="field">Language<select id="nbLang"><option>Python</option><option>SQL</option></select></label></div>
+ <button class="btn small" id="nbCreate" style="margin-top:12px">${icon("notebook")}Create notebook</button></div><div id="nb"></div>`;
+ el.querySelector("#nbCreate").onclick=()=>{
+  const nm=el.querySelector("#nbName").value.trim()||"untitled",lang=el.querySelector("#nbLang").value;
+  const code=lang==="Python"?`df = spark.table("samples.retail.orders")\ndisplay(df.limit(3))`:`SELECT * FROM samples.retail.orders\nLIMIT 3`;
+  el.querySelector("#nb").innerHTML=`<div class="panel"><h4>${icon("folder").replace('class=""','style="width:14px;height:14px;vertical-align:-2px"')} Workspace / Users / you / ${esc(nm)}</h4>
+   <div class="row" style="justify-content:space-between"><span class="status" id="cl">Compute: serverless, ready</span><button class="btn small teal" id="run">${icon("play")}Run cell</button></div>
+   <div class="code">${hl(code)}</div><div id="out"></div></div>`;
+  el.querySelector("#run").onclick=async e=>{
+   e.currentTarget.disabled=true;el.querySelector("#out").innerHTML=`<p class="status run"><span class="spin"></span>Running</p>`;
+   await sleep(900);
+   el.querySelector("#out").innerHTML=`<p class="status ok">${icon("check").replace('class=""','style="width:14px;height:14px"')}Finished in 0.9s</p>`+tbl(ORDERS.slice(0,3),["id","region","product","amount"]);
+   ok();
+  };
+ };
+},
+delta(el,ok){
+ const V=[
+  {v:0,op:"CREATE TABLE",rows:ORDERS.slice(0,4).map(r=>({...r}))},
+  {v:1,op:"INSERT (4 rows)",rows:ORDERS.slice(0,8).map(r=>({...r}))},
+  {v:2,op:"UPDATE (mistake: amount set to 0)",rows:ORDERS.slice(0,8).map(r=>({...r,amount:0}))}
+ ];
+ let restored=false;
+ el.innerHTML=`<div class="panel"><h4>Table history: sales.orders</h4>${tbl(V.map(x=>({version:x.v,operation:x.op})),["version","operation"])}
+  <label class="field"><span>Read the table as of version <b id="vv" class="mono">2</b></span><input type="range" class="slider" min="0" max="2" value="2" id="vs"></label>
+  <div class="versions"><span>v0</span><span>v1</span><span>v2 (latest)</span></div></div>
+  <div class="panel"><h4 id="vh">sales.orders, version 2</h4><div id="vt"></div><div id="vx"></div></div>`;
+ const draw=v=>{
+  const x=V[v];el.querySelector("#vv").textContent=v;
+  el.querySelector("#vh").textContent=restored&&v===2?"sales.orders, latest (restored)":`sales.orders, version ${v}`;
+  const rows=restored&&v===2?V[1].rows:x.rows;
+  el.querySelector("#vt").innerHTML=`<div class="code">${hl(`SELECT * FROM sales.orders VERSION AS OF ${v}`)}</div>`+tbl(rows.slice(0,4),["id","product","amount"],{bad:r=>r.amount===0});
+  el.querySelector("#vx").innerHTML=v===1&&!restored?`<p class="feedback ok">Version 1 looks right. Roll the table back to it.</p><button class="btn small teal" id="rs">${icon("swap")}Restore to version 1</button>`:(v===2&&!restored?`<p class="feedback no">Someone set every amount to 0. Slide back to find a good version.</p>`:"");
+  const rs=el.querySelector("#rs");
+  if(rs)rs.onclick=()=>{restored=true;el.querySelector("#vs").value=2;el.querySelector("#vx").innerHTML=`<div class="code">${hl("RESTORE TABLE sales.orders TO VERSION AS OF 1")}</div><p class="feedback ok">Restored. The fix is itself a new version (v3), so nothing is ever lost.</p>`;draw2();ok();};
+ };
+ const draw2=()=>{el.querySelector("#vh").textContent="sales.orders, latest (restored)";el.querySelector("#vt").innerHTML=tbl(V[1].rows.slice(0,4),["id","product","amount"]);};
+ el.querySelector("#vs").oninput=e=>draw(+e.target.value);
+ draw(2);
+},
+uc(el,ok){
+ el.innerHTML=`<div class="panel"><h4>Catalog Explorer</h4><ul class="tree" id="tree"></ul></div>
+ <div class="panel"><h4>Grant access</h4><div class="row">
+  <label class="field">Who<select id="gWho"><option value="">Choose a group</option><option>analysts</option><option>engineers</option></select></label>
+  <label class="field">On<select id="gOn"><option value="">Choose a schema</option><option>sales_prod.gold</option><option>sales_prod.bronze</option></select></label>
+  <label class="field">Privilege<select id="gPriv"><option value="">Choose</option><option>SELECT</option><option>MODIFY</option></select></label></div>
+  <div id="gSql"></div><button class="btn small teal" id="gRun" disabled>${icon("play")}Run grants</button><p class="feedback" id="gFb"></p></div>
+ <div class="panel" id="viewAs" hidden><h4>See it as an analyst</h4><label class="toggle"><input type="checkbox" id="asA" checked><span class="sw"></span>Viewing as a member of analysts</label><div id="maskT"></div><p style="color:var(--muted);font-size:14px;margin:6px 0 0">A column mask hides email addresses from everyone outside the support group.</p></div>`;
+ const T=[["sales_prod","catalog",[["gold","schema",["daily_revenue","customers"]],["bronze","schema",["orders_raw"]]]],["system","catalog",[["billing","schema",["usage"]]]]];
+ el.querySelector("#tree").innerHTML=T.map(([c,,schemas])=>`<li><button aria-expanded="false">${icon("folder")}${c}</button><ul hidden>${schemas.map(([s,,tabs])=>`<li><button aria-expanded="false">${icon("layers")}${s}</button><ul hidden>${tabs.map(t=>`<li class="leaf">${icon("table")}${t}</li>`).join("")}</ul></li>`).join("")}</ul></li>`).join("");
+ el.querySelectorAll(".tree button").forEach(b=>b.onclick=()=>{const u=b.nextElementSibling;u.hidden=!u.hidden;b.setAttribute("aria-expanded",!u.hidden)});
+ const upd=()=>{
+  const w=el.querySelector("#gWho").value,o=el.querySelector("#gOn").value,p=el.querySelector("#gPriv").value;
+  const r=el.querySelector("#gRun");r.disabled=!(w&&o&&p);
+  el.querySelector("#gSql").innerHTML=w&&o&&p?`<div class="code">${hl(`GRANT USE CATALOG ON CATALOG ${o.split(".")[0]} TO \`${w}\`;\nGRANT USE SCHEMA ON SCHEMA ${o} TO \`${w}\`;\nGRANT ${p} ON SCHEMA ${o} TO \`${w}\`;`)}</div>`:"";
+ };
+ ["#gWho","#gOn","#gPriv"].forEach(s=>el.querySelector(s).onchange=upd);
+ el.querySelector("#gRun").onclick=()=>{
+  const w=el.querySelector("#gWho").value,o=el.querySelector("#gOn").value,p=el.querySelector("#gPriv").value,fb=el.querySelector("#gFb");
+  if(w==="analysts"&&o==="sales_prod.gold"&&p==="SELECT"){
+   fb.className="feedback ok";fb.textContent="Granted. Analysts can now read every table in the gold schema, and nothing else.";
+   el.querySelector("#viewAs").hidden=false;drawMask();ok();
+  }else{
+   fb.className="feedback no";
+   fb.textContent=w!=="analysts"?"Close. The task is to give the analysts group access.":o!=="sales_prod.gold"?"Analysts should read business-ready data. Try the gold schema.":"Analysts only need to read. SELECT is enough; MODIFY would let them change data.";
+  }
+ };
+ const drawMask=()=>{const a=el.querySelector("#asA").checked;el.querySelector("#maskT").innerHTML=tbl(ORDERS.slice(0,3),["id","region","email"],{mask:a?["email"]:[]});};
+ el.querySelector("#asA").onchange=drawMask;
+},
+comp(el,ok){
+ const Q=[
+  {q:"An analyst exploring data in a notebook, needs results now",a:"serverless",why:"Serverless starts fast with nothing to configure."},
+  {q:"A nightly Scala job that needs a specific library and GPUs",a:"classic",why:"Scala, GPUs and custom setups need a classic cluster."},
+  {q:"Power BI dashboards querying gold tables all day",a:"warehouse",why:"SQL warehouses are tuned for BI and SQL queries."}
+ ];
+ const C=[["serverless","Serverless","Ready in moments, fully managed","cloud"],["classic","Classic cluster","Your machines, full control","cpu"],["warehouse","SQL warehouse","Built for SQL and BI","db"]];
+ let right=0;
+ el.innerHTML=Q.map((x,i)=>`<div class="panel" data-q="${i}"><h4>Workload ${i+1} of 3</h4><p style="margin:0 0 10px;font-weight:600">${esc(x.q)}</p><div class="choices">${C.map(c=>`<button class="choice" data-c="${c[0]}" aria-pressed="false">${icon(c[3])}<b>${c[1]}</b><small>${c[2]}</small></button>`).join("")}</div><p class="feedback"></p></div>`).join("");
+ el.querySelectorAll(".panel").forEach(p=>{
+  const i=+p.dataset.q;let solved=false;
+  p.querySelectorAll(".choice").forEach(b=>b.onclick=()=>{
+   if(solved)return;
+   p.querySelectorAll(".choice").forEach(x=>{x.classList.remove("wrong");x.setAttribute("aria-pressed","false")});
+   b.setAttribute("aria-pressed","true");const fb=p.querySelector(".feedback");
+   if(b.dataset.c===Q[i].a){b.classList.add("right");fb.className="feedback ok";fb.textContent="Right. "+Q[i].why;solved=true;right++;if(right===Q.length)ok();}
+   else{b.classList.add("wrong");fb.className="feedback no";fb.textContent="Not quite. Think about who's waiting and what the code needs.";}
+  });
+ });
+},
+conn(el,ok){
+ const SRC=[["sf","Salesforce","SaaS app","cloud","Managed SaaS connector","Point, click, schedule. Schema changes handled for you.",1240],
+            ["sql","SQL Server","Database","db","Managed database connector with CDC","An ingestion gateway reads the change log, so only changed rows move.",3810],
+            ["files","CSV files in storage","Files","file","Auto Loader","Detects new files and processes each one exactly once.",560],
+            ["kafka","Kafka topic","Event stream","stream","Streaming table","Reads events continuously as they arrive.",9800]];
+ el.innerHTML=`<div class="panel"><h4>Pick a source</h4><div class="choices">${SRC.map(s=>`<button class="choice" data-s="${s[0]}" aria-pressed="false">${icon(s[3])}<b>${s[1]}</b><small>${s[2]}</small></button>`).join("")}</div></div><div id="ing"></div>`;
+ el.querySelectorAll(".choice").forEach(b=>b.onclick=()=>{
+  el.querySelectorAll(".choice").forEach(x=>x.setAttribute("aria-pressed","false"));b.setAttribute("aria-pressed","true");
+  const s=SRC.find(x=>x[0]===b.dataset.s);
+  el.querySelector("#ing").innerHTML=`<div class="panel"><h4>Method</h4><p style="margin:0;font-weight:700">${s[4]}</p><p style="margin:2px 0 10px;color:var(--muted)">${s[5]}</p>
+   <label class="field">Destination table<input value="sales_prod.bronze.${s[0]}_raw" id="dest"></label>
+   <button class="btn small teal" id="go" style="margin-top:12px">${icon("play")}Start ingestion</button><div id="prog" style="margin-top:12px"></div></div>`;
+  el.querySelector("#go").onclick=async e=>{
+   e.currentTarget.disabled=true;const p=el.querySelector("#prog"),dest=el.querySelector("#dest").value;
+   p.innerHTML=`<div class="bar"><i id="bi"></i></div><p class="status run" id="bt" style="margin-top:8px"><span class="spin"></span>Ingesting</p>`;
+   for(let k=1;k<=5;k++){await sleep(280);p.querySelector("#bi").style.width=(k*20)+"%";p.querySelector("#bt").innerHTML=`<span class="spin"></span>${Math.round(s[6]*k/5).toLocaleString()} rows`;}
+   p.querySelector("#bt").className="status ok";p.querySelector("#bt").textContent=`${s[6].toLocaleString()} rows landed in ${dest}`;
+   p.insertAdjacentHTML("beforeend",`<p class="feedback ok">Done. Next run, only new or changed data will move.</p>`);ok();
+  };
+ });
+},
+pipe(el,ok){
+ const STEPS=[["bronze","orders_bronze","Raw orders, exactly as they arrived","STREAMING TABLE"],["silver","orders_silver","Cleaned: valid amounts, typed dates","STREAMING TABLE"],["gold","daily_revenue","Revenue per day, ready for dashboards","MATERIALIZED VIEW"]];
+ let built=[];
+ el.innerHTML=`<div class="panel"><h4>Add the tables in the right order</h4><div class="choices" id="pick">${[2,0,1].map(i=>`<button class="choice" data-i="${i}">${icon("layers")}<b>${STEPS[i][1]}</b><small>${STEPS[i][2]}</small></button>`).join("")}</div><p class="feedback" id="pfb"></p></div>
+ <div class="panel"><h4>Your pipeline</h4><div class="dag" id="dag"><p style="margin:0;color:var(--muted)">Empty. Pick the raw table first.</p></div>
+ <label class="toggle" style="margin-top:12px"><input type="checkbox" id="exp"><span class="sw"></span>Add expectation: drop rows where amount is missing</label>
+ <div id="pcode"></div><button class="btn small teal" id="prun" disabled>${icon("play")}Run pipeline</button><div id="pres"></div></div>`;
+ const draw=()=>{
+  el.querySelector("#dag").innerHTML=built.length?built.map((i,k)=>`${k?'<div class="dag-arrow"></div>':""}<div class="dag-step" data-k="${k}">${icon("table").replace('class=""','style="width:18px;height:18px;color:var(--zc)"')}<span class="name">${STEPS[i][1]}</span><span class="status" id="st${k}">waiting</span></div>`).join(""):`<p style="margin:0;color:var(--muted)">Empty. Pick the raw table first.</p>`;
+  el.querySelector("#prun").disabled=built.length<3;
+  const e=el.querySelector("#exp").checked;
+  el.querySelector("#pcode").innerHTML=built.length===3?`<div class="code">${hl(e?"CREATE OR REFRESH STREAMING TABLE orders_silver(\n  CONSTRAINT valid_amount EXPECT (amount IS NOT NULL)\n  ON VIOLATION DROP ROW\n) AS SELECT * FROM STREAM(orders_bronze);":"CREATE OR REFRESH STREAMING TABLE orders_silver\nAS SELECT * FROM STREAM(orders_bronze);")}</div>`:"";
+ };
+ el.querySelectorAll("#pick .choice").forEach(b=>b.onclick=()=>{
+  const i=+b.dataset.i,fb=el.querySelector("#pfb");
+  if(built.includes(i))return;
+  if(i===built.length){built.push(i);b.classList.add("right");b.disabled=true;fb.className="feedback ok";fb.textContent=built.length<3?"Good. What comes next?":"Bronze, silver, gold: that's the medallion pattern.";draw();}
+  else{fb.className="feedback no";fb.textContent=built.length===0?"Start with the raw data. Bronze always comes first.":"Clean the data before you aggregate it.";}
+ });
+ el.querySelector("#exp").onchange=draw;
+ el.querySelector("#prun").onclick=async e=>{
+  e.currentTarget.disabled=true;const exp=el.querySelector("#exp").checked;
+  const counts=exp?[10000,9962,31]:[10000,10000,31];
+  for(let k=0;k<3;k++){const s=el.querySelector("#st"+k);s.className="status run";s.innerHTML='<span class="spin"></span>running';await sleep(650);s.className="status ok";s.textContent=counts[k].toLocaleString()+" rows";}
+  el.querySelector("#pres").innerHTML=exp?`<p class="feedback ok">Done. The expectation dropped 38 rows with missing amounts before they reached gold.</p>`:`<p class="feedback no">Done, but 38 rows with missing amounts reached gold. Switch on the expectation and run again to see the difference.</p>`;
+  if(exp)ok();else{e.currentTarget.disabled=false;}
+ };
+ draw();
+},
+jobs(el,ok){
+ const TK=[["ingest","Ingest orders","pipeline"],["transform","Transform to gold","pipeline"],["check","Quality check","notebook"],["refresh","Refresh dashboard","SQL"]];
+ let attempt=0;
+ el.innerHTML=`<div class="panel"><h4>1. Choose a trigger</h4><div class="seg" id="trig"><button aria-pressed="true" data-t="Every day at 02:00">Schedule</button><button aria-pressed="false" data-t="When a new file lands in /Volumes/sales/raw">File arrival</button><button aria-pressed="false" data-t="When sales_prod.bronze.orders changes">Table update</button></div><p style="margin:8px 0 0;color:var(--muted)" id="trigTxt">Every day at 02:00</p></div>
+ <div class="panel"><h4>2. Your job: nightly_sales</h4><div class="dag">${TK.map((t,k)=>`${k?'<div class="dag-arrow"></div>':""}<div class="dag-step"><span class="name">${t[1]}</span><small style="color:var(--muted)">${t[2]}</small><span class="status" id="j${k}">waiting</span></div>`).join("")}</div>
+ <div class="row" style="margin-top:12px"><button class="btn small teal" id="jrun">${icon("play")}Run now</button><button class="btn small ghost" id="jrep" hidden>${icon("swap")}Repair run</button></div><p class="feedback" id="jfb"></p></div>`;
+ el.querySelectorAll("#trig button").forEach(b=>b.onclick=()=>{el.querySelectorAll("#trig button").forEach(x=>x.setAttribute("aria-pressed","false"));b.setAttribute("aria-pressed","true");el.querySelector("#trigTxt").textContent=b.dataset.t;});
+ const run=async(from)=>{
+  for(let k=from;k<TK.length;k++){
+   const s=el.querySelector("#j"+k);s.className="status run";s.innerHTML='<span class="spin"></span>running';await sleep(600);
+   if(k===2&&attempt===1){s.className="status fail";s.textContent="failed";el.querySelector("#j3").textContent="skipped";
+    const fb=el.querySelector("#jfb");fb.className="feedback no";fb.textContent="The quality check failed: a source file arrived late. Repair the run to re-run only the failed task and what comes after it.";
+    el.querySelector("#jrep").hidden=false;return;}
+   s.className="status ok";s.textContent="succeeded";
+  }
+  const fb=el.querySelector("#jfb");fb.className="feedback ok";fb.textContent="Job succeeded. The repair skipped the two tasks that had already worked, saving time and compute.";el.querySelector("#jrep").hidden=true;ok();
+ };
+ el.querySelector("#jrun").onclick=e=>{e.currentTarget.disabled=true;attempt=1;run(0);};
+ el.querySelector("#jrep").onclick=e=>{e.currentTarget.disabled=true;attempt=2;el.querySelector("#j3").textContent="waiting";el.querySelector("#j3").className="status";run(2);};
+},
+sql(el,ok){
+ const QS=[
+  ["Revenue by region",`SELECT region, SUM(amount) AS revenue\nFROM sales_prod.gold.orders\nGROUP BY region\nORDER BY revenue DESC;`,()=>group(ORDERS,"region","amount").sort((a,b)=>b[1]-a[1]),["region","revenue"]],
+  ["Orders by product",`SELECT product, COUNT(*) AS orders\nFROM sales_prod.gold.orders\nGROUP BY product;`,()=>group(ORDERS,"product"),["product","orders"]],
+  ["Top 3 orders",`SELECT id, product, amount\nFROM sales_prod.gold.orders\nORDER BY amount DESC\nLIMIT 3;`,null,["id","product","amount"]]
+ ];
+ el.innerHTML=`<div class="panel"><h4>SQL editor, connected to a serverless SQL warehouse</h4><div class="suggest" id="qs">${QS.map((q,i)=>`<button data-i="${i}">${q[0]}</button>`).join("")}</div><div id="qed"><p style="color:var(--muted);margin:10px 0 0">Pick a query to load it into the editor.</p></div></div><div id="qout"></div>`;
+ el.querySelectorAll("#qs button").forEach(b=>b.onclick=()=>{
+  const q=QS[+b.dataset.i];
+  el.querySelector("#qed").innerHTML=`<div class="code">${hl(q[1])}</div><button class="btn small teal" id="qr">${icon("play")}Run query</button>`;
+  el.querySelector("#qout").innerHTML="";
+  el.querySelector("#qr").onclick=async e=>{
+   e.currentTarget.disabled=true;el.querySelector("#qout").innerHTML=`<div class="panel"><p class="status run"><span class="spin"></span>Running</p></div>`;await sleep(700);
+   let rows,html;
+   if(q[2]){const d=q[2]();rows=d.map(([k,v])=>({[q[3][0]]:k,[q[3][1]]:q[3][1]==="revenue"?money(v):v}));html=tbl(rows,q[3])+bars(d,{fmt:q[3][1]==="revenue"?money:v=>v});}
+   else{rows=[...ORDERS].sort((a,b)=>b.amount-a.amount).slice(0,3).map(r=>({...r,amount:money(r.amount)}));html=tbl(rows,q[3]);}
+   el.querySelector("#qout").innerHTML=`<div class="panel"><h4>${rows.length} rows, 0.4s</h4>${html}</div>`;ok();
+  };
+ });
+},
+dash(el,ok){
+ let metric="amount",type="bar",reg="All";
+ el.innerHTML=`<div class="panel"><h4>Design your chart</h4><div class="row" style="gap:14px">
+  <div><div style="font-size:14px;font-weight:600;color:var(--muted);margin-bottom:4px">Measure</div><div class="seg" id="dm"><button aria-pressed="true" data-v="amount">Revenue</button><button aria-pressed="false" data-v="qty">Units</button></div></div>
+  <div><div style="font-size:14px;font-weight:600;color:var(--muted);margin-bottom:4px">Chart</div><div class="seg" id="dt"><button aria-pressed="true" data-v="bar">Bar by region</button><button aria-pressed="false" data-v="line">Line by day</button></div></div>
+  <label class="field" style="max-width:180px">Filter region<select id="dr"><option>All</option><option>North</option><option>South</option><option>East</option><option>West</option></select></label></div></div>
+  <div class="panel"><h4 id="dh"></h4><div id="dc"></div><button class="btn small teal" id="dp">${icon("chart")}Publish dashboard</button><p class="feedback" id="dfb"></p></div>`;
+ const draw=()=>{
+  const rows=ORDERS.filter(r=>reg==="All"||r.region===reg);
+  const fmt=metric==="amount"?money:v=>v;
+  el.querySelector("#dh").textContent=`${metric==="amount"?"Revenue":"Units sold"} ${type==="bar"?"by region":"by day"}${reg!=="All"?", "+reg:""}`;
+  const d=type==="bar"?group(rows,"region",metric):group(rows,"date",metric).map(([k,v])=>[k.slice(5),v]);
+  el.querySelector("#dc").innerHTML=type==="bar"||d.length<2?bars(d,{fmt}):line(d,{fmt});
+ };
+ const seg=(id,set)=>el.querySelectorAll(id+" button").forEach(b=>b.onclick=()=>{el.querySelectorAll(id+" button").forEach(x=>x.setAttribute("aria-pressed","false"));b.setAttribute("aria-pressed","true");set(b.dataset.v);draw();});
+ seg("#dm",v=>metric=v);seg("#dt",v=>type=v);
+ el.querySelector("#dr").onchange=e=>{reg=e.target.value;draw();};
+ el.querySelector("#dp").onclick=()=>{const f=el.querySelector("#dfb");f.className="feedback ok";f.textContent="Published. Viewers see this chart with their own data permissions applied.";ok();};
+ draw();
+},
+genie(el,ok){
+ const tot=ORDERS.reduce((a,r)=>a+r.amount,0);
+ const KB=[
+  [/region|where|best|top/i,"Which region sold the most?",()=>{const g=group(ORDERS,"region","amount").sort((a,b)=>b[1]-a[1]);return [`${g[0][0]} led with ${money(g[0][1])}, ahead of ${g[1][0]} at ${money(g[1][1])}.`,`SELECT region, SUM(amount) AS revenue\nFROM sales_prod.gold.orders\nGROUP BY region ORDER BY revenue DESC LIMIT 1;`]}],
+  [/total|revenue|how much|sales/i,"What was total revenue?",()=>[`Total revenue across all orders was ${money(tot)}.`,`SELECT SUM(amount) AS total_revenue\nFROM sales_prod.gold.orders;`]],
+  [/laptop|product|phone|tablet/i,"How many laptops did we sell?",()=>{const q=ORDERS.filter(r=>r.product==="Laptop").reduce((a,r)=>a+r.qty,0);return [`${q} laptops were sold across ${ORDERS.filter(r=>r.product==="Laptop").length} orders.`,`SELECT SUM(qty) AS laptops_sold\nFROM sales_prod.gold.orders\nWHERE product = 'Laptop';`]}],
+  [/average|avg|typical/i,"What's the average order value?",()=>[`The average order was worth ${money(Math.round(tot/ORDERS.length))}.`,`SELECT AVG(amount) AS avg_order_value\nFROM sales_prod.gold.orders;`]]
+ ];
+ el.innerHTML=`<div class="panel"><h4>Genie space: Sales</h4><div class="chat" id="chat"><div class="msg bot">Hi. I can answer questions about the sales tables. Try one of the suggestions, or type your own.</div></div>
+ <div class="suggest">${KB.map((k,i)=>`<button data-i="${i}">${k[1]}</button>`).join("")}</div>
+ <form class="chat-input" id="cf" onsubmit="return false"><label class="sr" for="ci">Ask a question</label><input id="ci" placeholder="Ask about sales"><button class="btn small teal" aria-label="Send">${icon("right")}</button></form></div>`;
+ const chat=el.querySelector("#chat");
+ const ask=async q=>{
+  chat.insertAdjacentHTML("beforeend",`<div class="msg me">${esc(q)}</div>`);
+  chat.insertAdjacentHTML("beforeend",`<div class="msg bot" id="think"><span class="spin"></span> Writing SQL</div>`);chat.scrollTop=chat.scrollHeight;
+  await sleep(800);chat.querySelector("#think").remove();
+  const k=KB.find(x=>x[0].test(q));
+  if(k){const [a,s]=k[2]();chat.insertAdjacentHTML("beforeend",`<div class="msg bot"><b>${esc(a)}</b><div class="code">${hl(s)}</div><small style="color:var(--muted)">Generated SQL, shown so you can check it.</small></div>`);ok();}
+  else chat.insertAdjacentHTML("beforeend",`<div class="msg bot">I can only see the sales tables in this space. Ask about revenue, regions, products or order values.</div>`);
+  chat.scrollTop=chat.scrollHeight;
+ };
+ el.querySelectorAll(".suggest button").forEach(b=>b.onclick=()=>ask(KB[+b.dataset.i][1]));
+ el.querySelector("#cf").onsubmit=e=>{e.preventDefault();const i=el.querySelector("#ci");if(i.value.trim()){ask(i.value.trim());i.value="";}return false;};
+},
+gcode(el,ok){
+ const P=[["Load new CSV files from /Volumes/sales/raw into a bronze table",`-- Generated by Genie Code\nCREATE OR REFRESH STREAMING TABLE orders_bronze AS\nSELECT *, current_timestamp() AS ingested_at\nFROM STREAM read_files(\n  '/Volumes/sales_prod/bronze/raw_orders/',\n  format => 'csv'\n);`],
+          ["Create a daily revenue table by region from orders_silver",`-- Generated by Genie Code\nCREATE OR REFRESH MATERIALIZED VIEW daily_revenue AS\nSELECT order_date, region, SUM(amount) AS revenue\nFROM orders_silver\nGROUP BY order_date, region;`],
+          ["Drop orders with a negative amount before silver",`-- Generated by Genie Code\nCREATE OR REFRESH STREAMING TABLE orders_silver(\n  CONSTRAINT positive_amount EXPECT (amount >= 0)\n  ON VIOLATION DROP ROW\n) AS SELECT * FROM STREAM(orders_bronze);`]];
+ el.innerHTML=`<div class="panel"><h4>Describe what you want</h4><div class="suggest">${P.map((p,i)=>`<button data-i="${i}">${esc(p[0])}</button>`).join("")}</div></div>
+ <div class="panel"><h4>Pipeline editor</h4><div class="code typer" id="ty"><span class="c">-- Pick a prompt and Genie Code will write the pipeline here</span></div><div class="row"><button class="btn small teal" id="acc" disabled>${icon("check")}Accept and run</button></div><p class="feedback" id="gfb"></p></div>`;
+ let busy=false;
+ el.querySelectorAll(".suggest button").forEach(b=>b.onclick=async()=>{
+  if(busy)return;busy=true;const code=P[+b.dataset.i][1],ty=el.querySelector("#ty");el.querySelector("#acc").disabled=true;
+  const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if(reduce){ty.innerHTML=hl(code);}else{for(let k=0;k<=code.length;k+=3){ty.innerHTML=hl(code.slice(0,k));await sleep(14);}ty.innerHTML=hl(code);}
+  busy=false;el.querySelector("#acc").disabled=false;
+ });
+ el.querySelector("#acc").onclick=async e=>{e.currentTarget.disabled=true;const f=el.querySelector("#gfb");f.className="feedback";f.innerHTML='<span class="spin"></span> Running';await sleep(800);f.className="feedback ok";f.textContent="Ran successfully. You reviewed the code, Genie Code did the typing.";ok();};
+},
+ml(el,ok){
+ const R=[{run:"run_01",model:"logistic regression",accuracy:0.81},{run:"run_02",model:"random forest",accuracy:0.88},{run:"run_03",model:"gradient boosting",accuracy:0.86}];
+ let stage=0;
+ el.innerHTML=`<div class="panel"><h4>MLflow experiment: churn_prediction</h4><p style="margin:0 0 6px;color:var(--muted)">Three training runs are logged. Pick the one to promote.</p><div class="choices" id="runs">${R.map((r,i)=>`<button class="choice" data-i="${i}" aria-pressed="false">${icon("flask")}<b>${r.run}</b><small>${r.model}<br>accuracy ${r.accuracy}</small></button>`).join("")}</div><p class="feedback" id="mfb"></p></div>
+ <div class="panel"><h4>Ship it</h4><div class="dag"><div class="dag-step"><span class="name">Register in Unity Catalog as ml.churn_model</span><button class="btn small" id="reg" disabled>Register</button></div><div class="dag-arrow"></div><div class="dag-step"><span class="name">Create serving endpoint</span><button class="btn small" id="srv" disabled>Serve</button></div></div><div id="test"></div></div>`;
+ el.querySelectorAll("#runs .choice").forEach(b=>b.onclick=()=>{
+  if(stage>0)return;const i=+b.dataset.i,f=el.querySelector("#mfb");
+  el.querySelectorAll("#runs .choice").forEach(x=>{x.classList.remove("wrong");x.setAttribute("aria-pressed","false")});b.setAttribute("aria-pressed","true");
+  if(i===1){b.classList.add("right");f.className="feedback ok";f.textContent="Best accuracy. Every parameter and metric is tracked, so you can explain the choice later.";stage=1;el.querySelector("#reg").disabled=false;}
+  else{b.classList.add("wrong");f.className="feedback no";f.textContent="Compare the accuracy column. One run scores higher.";}
+ });
+ el.querySelector("#reg").onclick=async e=>{e.currentTarget.innerHTML='<span class="spin"></span>';await sleep(600);e.currentTarget.textContent="Version 1";e.currentTarget.disabled=true;el.querySelector("#srv").disabled=false;};
+ el.querySelector("#srv").onclick=async e=>{e.currentTarget.innerHTML='<span class="spin"></span>';await sleep(900);e.currentTarget.textContent="Ready";e.currentTarget.disabled=true;
+  el.querySelector("#test").innerHTML=`<div class="panel" style="margin-top:12px;background:var(--surface-2)"><h4>Test the endpoint</h4><div class="row"><label class="field">Months as customer<input type="number" id="t1" value="4" min="0"></label><label class="field">Support tickets last month<input type="number" id="t2" value="3" min="0"></label></div><button class="btn small teal" id="pred" style="margin-top:10px">${icon("play")}Get prediction</button><p class="feedback" id="pout"></p></div>`;
+  el.querySelector("#pred").onclick=()=>{const m=+el.querySelector("#t1").value||0,t=+el.querySelector("#t2").value||0;const p=Math.max(3,Math.min(96,Math.round(70-m*3+t*9)));const o=el.querySelector("#pout");o.className="feedback "+(p>50?"no":"ok");o.textContent=`Churn risk: ${p}%. ${p>50?"Flag for the retention team.":"Low risk."} (Illustrative model.)`;ok();};
+ };
+},
+agent(el,ok){
+ const parts={know:false,tool:false,guard:false};
+ el.innerHTML=`<div class="panel"><h4>Assemble the agent: support_assistant</h4><div class="choices">
+  <button class="choice" data-p="know" aria-pressed="false">${icon("book")}<b>Knowledge</b><small>Product manuals, indexed with vector search</small></button>
+  <button class="choice" data-p="tool" aria-pressed="false">${icon("db")}<b>Tool</b><small>A SQL function that looks up an order's status</small></button>
+  <button class="choice" data-p="guard" aria-pressed="false">${icon("shield")}<b>Guardrail</b><small>Mask personal data, cap spend through the AI gateway</small></button></div>
+  <p class="feedback" id="afb">Add all three pieces.</p></div>
+ <div class="panel"><h4>Test it</h4><div class="chat" id="achat"><div class="msg bot">Assemble the agent above, then ask me something.</div></div><div class="suggest"><button id="aq" disabled>Where is order 1004, and how do I reset my phone?</button></div></div>`;
+ el.querySelectorAll(".choice").forEach(b=>b.onclick=()=>{const p=b.dataset.p;parts[p]=!parts[p];b.setAttribute("aria-pressed",parts[p]);const n=Object.values(parts).filter(Boolean).length;const f=el.querySelector("#afb");
+  f.className="feedback"+(n===3?" ok":"");f.textContent=n===3?"Agent assembled. Evaluate it before release; here, just ask it a question.":`${n} of 3 pieces added.`;el.querySelector("#aq").disabled=n<3;});
+ el.querySelector("#aq").onclick=async e=>{e.currentTarget.disabled=true;const c=el.querySelector("#achat");
+  c.insertAdjacentHTML("beforeend",`<div class="msg me">Where is order 1004, and how do I reset my phone?</div><div class="msg bot" id="ath"><span class="spin"></span> Searching manuals and calling get_order_status(1004)</div>`);
+  await sleep(1100);c.querySelector("#ath").remove();
+  c.insertAdjacentHTML("beforeend",`<div class="msg bot">Order 1004 (2 phones) shipped on 3 October and is out for delivery. To reset your phone, hold the power and volume-down buttons for ten seconds, then choose Reset from the menu.<br><small style="color:var(--muted)">Sources: orders table, Phone manual p.12. Customer email masked by guardrail.</small></div>`);
+  c.scrollTop=c.scrollHeight;ok();};
+},
+share(el,ok){
+ el.innerHTML=`<div class="panel"><h4>Create a share</h4><div class="row"><label class="field">Share name<input id="sn" value="partner_sales"></label><label class="field">Table to share<select id="st"><option value="">Choose a table</option><option>sales_prod.gold.daily_revenue</option><option>sales_prod.gold.customers</option></select></label><label class="field">Recipient<select id="sr"><option value="">Choose a partner</option><option value="acme_logistics">Acme Logistics (any platform)</option></select></label></div>
+ <div id="ssql"></div><button class="btn small teal" id="sgo" disabled>${icon("share")}Share it</button><p class="feedback" id="sfb"></p></div>`;
+ const upd=()=>{const n=el.querySelector("#sn").value.trim()||"my_share",t=el.querySelector("#st").value,r=el.querySelector("#sr").value;el.querySelector("#sgo").disabled=!(t&&r);
+  el.querySelector("#ssql").innerHTML=t&&r?`<div class="code">${hl(`CREATE SHARE ${n};\nALTER SHARE ${n} ADD TABLE ${t};\nCREATE RECIPIENT ${r};\nGRANT SELECT ON SHARE ${n} TO RECIPIENT ${r};`)}</div>`:"";};
+ ["#sn","#st","#sr"].forEach(s=>el.querySelector(s).oninput=upd);el.querySelector("#st").onchange=upd;el.querySelector("#sr").onchange=upd;
+ el.querySelector("#sgo").onclick=()=>{const t=el.querySelector("#st").value,f=el.querySelector("#sfb");
+  if(t.endsWith("customers")){f.className="feedback no";f.textContent="Careful: customers holds personal data. Share the aggregated daily_revenue table instead.";return;}
+  f.className="feedback ok";f.textContent="Shared. Acme reads the live table without a copy, and you can revoke access at any time.";ok();};
+},
+lb(el,ok){
+ const oltp=[],lake=[];let synced=false;
+ el.innerHTML=`<div class="panel" style="border-left:6px solid var(--zc)"><h4>${icon("app").replace('class=""','style="width:16px;height:16px;vertical-align:-3px"')} Order entry app (Databricks Apps)</h4><div class="row"><label class="field">Product<select id="lp"><option>Laptop</option><option>Phone</option><option>Tablet</option></select></label><label class="field">Quantity<input type="number" id="lq" value="1" min="1" max="20"></label></div><button class="btn small teal" id="ls" style="margin-top:10px">Save order</button></div>
+ <div class="panel"><h4>Lakebase (Postgres): orders, live</h4><div id="lo"><p style="margin:0;color:var(--muted)">No orders yet. Save one from the app.</p></div></div>
+ <div class="panel"><h4>Lakehouse: sales_prod.silver.app_orders</h4><div id="ll"><p style="margin:0;color:var(--muted)">Empty until data is synced.</p></div><button class="btn small" id="lsync" disabled>${icon("swap")}Sync to lakehouse</button><p class="feedback" id="lfb"></p></div>`;
+ const price={Laptop:1200,Phone:800,Tablet:450};
+ el.querySelector("#ls").onclick=()=>{const p=el.querySelector("#lp").value,q=Math.max(1,+el.querySelector("#lq").value||1);oltp.push({id:2001+oltp.length,product:p,qty:q,amount:money(price[p]*q),saved:"just now"});el.querySelector("#lo").innerHTML=tbl(oltp,["id","product","qty","amount","saved"]);el.querySelector("#lsync").disabled=false;};
+ el.querySelector("#lsync").onclick=async e=>{e.currentTarget.disabled=true;e.currentTarget.innerHTML='<span class="spin"></span>Syncing';await sleep(800);lake.splice(0,lake.length,...oltp);el.querySelector("#ll").innerHTML=tbl(lake,["id","product","qty","amount"]);e.currentTarget.innerHTML=icon("swap")+"Sync to lakehouse";e.currentTarget.disabled=false;
+  const f=el.querySelector("#lfb");f.className="feedback ok";f.textContent="Synced. The app's live orders are now available for analytics, under the same governance.";ok();};
+},
+obs(el,ok){
+ const U=[["Jobs",4200],["SQL",3100],["Pipelines",2600],["Notebooks",1500],["Serving",900]];
+ el.innerHTML=`<div class="panel"><h4>Query the billing system table</h4><div class="code">${hl(`SELECT billing_origin_product AS product,\n       SUM(usage_quantity) AS dbus\nFROM system.billing.usage\nWHERE usage_date >= current_date() - 30\nGROUP BY 1 ORDER BY 2 DESC;`)}</div><button class="btn small teal" id="or">${icon("play")}Run query</button><div id="oo"></div></div>
+ <div class="panel" id="ob" hidden><h4>Act on it</h4><p style="margin:0 0 8px">Jobs use the most. Set a monthly budget alert so nobody is surprised.</p><label class="field" style="max-width:240px">Alert when monthly usage passes (DBUs)<input type="number" id="oa" value="12000" min="1"></label><button class="btn small teal" id="os" style="margin-top:10px">Create budget alert</button><p class="feedback" id="ofb"></p></div>`;
+ el.querySelector("#or").onclick=async e=>{e.currentTarget.disabled=true;el.querySelector("#oo").innerHTML='<p class="status run"><span class="spin"></span>Running</p>';await sleep(700);
+  el.querySelector("#oo").innerHTML=`<p style="color:var(--muted);font-size:14px;margin:8px 0 0">Last 30 days, sample data. DBU means Databricks Unit, the unit compute is billed in.</p>`+bars(U,{fmt:v=>v.toLocaleString()});el.querySelector("#ob").hidden=false;};
+ el.querySelector("#os").onclick=()=>{const v=+el.querySelector("#oa").value,f=el.querySelector("#ofb");if(!v||v<1){f.className="feedback no";f.textContent="Enter a positive number of DBUs.";return;}f.className="feedback ok";f.textContent=`Alert created. Admins are emailed when usage passes ${v.toLocaleString()} DBUs this month.`;ok();};
+}
+};
+
+/* ---------- wiring ---------- */
+document.addEventListener("click",e=>{
+ const o=e.target.closest("[data-open]");if(o){openStop(+o.dataset.open);return;}
+ const n=e.target.closest("[data-nav]");if(n){show(n.dataset.nav);}
+});
+$("#homeBtn").onclick=()=>show("v-map");
+$("#startBtn").onclick=()=>{const n=S.findIndex(s=>!done.has(s.id));openStop(n<0?0:n);};
+$("#sClose").onclick=closeStop;$("#sheetBack").onclick=closeStop;
+$("#tLearn").onclick=()=>{tab="learn";renderStop();};
+$("#tTry").onclick=()=>{tab="try";renderStop();};
+$("#sPrev").onclick=()=>{if(cur>0){cur--;tab="learn";renderStop();}};
+$("#sNext").onclick=()=>{if(cur<S.length-1){cur++;tab="learn";renderStop();}else{closeStop();show("v-prog");}};
+document.addEventListener("keydown",e=>{
+ if(!$("#sheet").classList.contains("on"))return;
+ if(e.key==="Escape")closeStop();
+ if(e.target.matches("input,select,textarea"))return;
+ if(e.key==="ArrowRight")$("#sNext").click();
+ if(e.key==="ArrowLeft"&&!$("#sPrev").disabled)$("#sPrev").click();
+});
+let tx=null,ty0=null;
+$("#sBody").addEventListener("touchstart",e=>{tx=e.touches[0].clientX;ty0=e.touches[0].clientY},{passive:true});
+$("#sBody").addEventListener("touchend",e=>{if(tx===null)return;const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty0;if(Math.abs(dx)>80&&Math.abs(dx)>Math.abs(dy)*1.8&&!e.target.closest(".tbl-wrap,.code,input,.slider")){if(dx<0)$("#sNext").click();else if(!$("#sPrev").disabled)$("#sPrev").click();}tx=null;});
+$("#glossSearch").oninput=e=>renderGloss(e.target.value);
+$("#passName").oninput=updatePass;
+$("#resetBtn").onclick=()=>{done.clear();renderMap();renderProgress();toast("Progress reset");};
+$("#themeBtn").onclick=()=>{const r=document.documentElement,dark=r.dataset.theme?r.dataset.theme==="dark":matchMedia("(prefers-color-scheme: dark)").matches;r.dataset.theme=dark?"light":"dark";};
+renderLegend();renderMap();renderGloss();renderProgress();
+</script>
+</body>
+</html>
